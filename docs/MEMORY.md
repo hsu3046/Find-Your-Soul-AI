@@ -1,6 +1,6 @@
 # AI Love Pick — 프로젝트 메모리
 
-> **Version:** 1.1.0 | **Updated:** 2026-03-15
+> **Version:** 1.2.0 | **Updated:** 2026-04-09
 
 ---
 
@@ -45,11 +45,10 @@
 
 ## ✅ 해결된 이슈 (Resolved Issues)
 
-### 6. [2026-03-15] [High] q7_answer Supabase NULL 버그 → 해결
-- **문제:** 7번 질문(multi-select)의 답변이 Supabase에 항상 NULL로 저장됨
-- **원인:** 7번은 `type: 'multi'`라 `answers` Map이 아닌 `multiAnswers` Map에 저장됨. `analytics.ts`에서 `answers.get(7)`만 참조 → 항상 undefined
-- **해결:** `result.practical.usageNeeds`에서 가져와 쉼표 구분 문자열로 저장
-- **방지:** multi-select 질문 추가 시 answers Map 외 별도 처리 필요
+### 6. [2026-03-15] [High] q7_answer Supabase NULL 버그 → 해결 (이후 Supabase 전체 제거로 N/A)
+- **당시 문제:** 7번 질문(multi-select)의 답변이 Supabase에 항상 NULL로 저장됨
+- **당시 원인:** 7번은 `type: 'multi'`라 `answers` Map이 아닌 `multiAnswers` Map에 저장됨
+- ⚠️ 2026-04-09: Supabase 전체 제거 → 이 이슈는 더 이상 해당 없음
 
 ### 5. ~~`intro.ts` 질문 수 하드코딩~~ → 해결
 - "8개 질문 · 약 2분 소요" → "12개 질문 · 약 3분 소요"로 수정
@@ -89,10 +88,16 @@
 
 ## 🔵 변경 이력 (Recent Changes)
 
-### [2026-03-15] Supabase 테이블 이름 변경
+### [2026-04-09] Supabase 완전 제거
+- **배경:** 로그/기록용 Supabase 로직 전체 삭제 요청
+- **삭제 파일:** `src/lib/supabase.ts`, `src/lib/analytics.ts`
+- **수정 파일:** `main.ts`(3곳 호출 제거), `result.ts`(2곳 호출 제거), `vite-env.d.ts`(타입 제거)
+- **패키지 제거:** `@supabase/supabase-js` (12개 관련 패키지 포함)
+- **결과:** 완전 클라이언트 전용 앱 — 외부 연결 0건
+
+### [2026-03-15] Supabase 테이블 이름 변경 (역사 기록 — 현재 N/A)
 - `soulai_quiz_submissions` → `ailovepick_quiz_submissions`
 - `soulai_events` → `ailovepick_events`
-- 코드 3곳 (`analytics.ts`) + Supabase SQL `ALTER TABLE RENAME` 실행
 
 ### [2026-03-15] 공유 텍스트 수정
 - 제목: `나에게 딱 맞는 AI는? <AI종류>`
@@ -107,11 +112,11 @@
 
 | 항목 | 값 |
 |------|-----|
-| **소스 파일 수** | 12개 (.ts + .css) |
-| **Supabase 테이블** | `ailovepick_quiz_submissions`, `ailovepick_events` |
+| **소스 파일 수** | 10개 (.ts + .css) |
+| **외부 연결** | 없음 (완전 클라이언트 전용) |
 | **질문 수** | 12개 (Phase 1: 6, Phase 2: 6) |
 | **AI 서비스 수** | 20개 |
 | **유형 수** | 8개 |
 | **사이트 URL** | `pick.knowai.app` |
-| **런타임 의존성** | lucide, html2canvas, @supabase/supabase-js |
+| **런타임 의존성** | lucide, html2canvas |
 | **빌드 의존성** | typescript, vite |

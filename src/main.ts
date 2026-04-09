@@ -4,7 +4,7 @@ import { renderQuiz } from './screens/quiz';
 import { renderLoading } from './screens/loading';
 import { renderResult } from './screens/result';
 import { calculateResult } from './engine/scoring';
-import { trackScreenView, initDwellTracking } from './lib/analytics';
+
 
 const app = document.querySelector<HTMLDivElement>('#app')!;
 
@@ -28,7 +28,7 @@ function startApp(): void {
   let phase1Answers: Map<number, string>;
 
   const intro = renderIntro(() => {
-    trackScreenView('quiz_phase1');
+
     // Phase 1: Personality quiz
     const quiz1 = renderQuiz(1, {
       onPhase1Complete: (answers) => {
@@ -41,14 +41,14 @@ function startApp(): void {
             const allAnswers = new Map([...phase1Answers, ...p2Answers]);
             const loading = renderLoading(() => {
               const result = calculateResult(allAnswers, multiAnswers);
-              const resultScreen = renderResult(result, startApp, allAnswers);
-              trackScreenView('result');
+              const resultScreen = renderResult(result, startApp);
+
               showScreen(resultScreen);
             });
             showScreen(loading);
           },
         });
-        trackScreenView('quiz_phase2');
+
         showScreen(quiz2);
       },
       onAllComplete: () => {},
@@ -59,5 +59,5 @@ function startApp(): void {
 }
 
 
-initDwellTracking();
+
 startApp();

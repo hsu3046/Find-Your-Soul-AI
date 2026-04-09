@@ -3,7 +3,7 @@ import { type QuizResult } from '../engine/scoring';
 import { aiServices } from '../data/results';
 import { injectIcon } from '../utils/icons';
 import { handleShareCard } from './share-card';
-import { submitQuizResult, trackShareClick } from '../lib/analytics';
+
 import {
   animateCharacterEntrance,
   animateResultHero,
@@ -23,7 +23,7 @@ function shortKRW(krw: number): string {
   return `${krw.toLocaleString()}원/월`;
 }
 
-export function renderResult(result: QuizResult, onRestart: () => void, answers?: Map<number, string>): HTMLElement {
+export function renderResult(result: QuizResult, onRestart: () => void): HTMLElement {
   const el = document.createElement('div');
   el.className = 'screen screen-result';
 
@@ -253,10 +253,7 @@ export function renderResult(result: QuizResult, onRestart: () => void, answers?
     injectIcon(el, 'section-soulmate-icon', 'crosshair');
     injectIcon(el, 'insight-icon', 'sparkles');
 
-    // Submit quiz result for anonymous analytics (fire-and-forget)
-    if (answers) {
-      submitQuizResult(answers, result);
-    }
+
 
     injectIcon(el, 'soulmate-main-icon', mainSvc.icon);
     injectIcon(el, 'receipt-title-icon', 'receipt');
@@ -535,7 +532,6 @@ export function renderResult(result: QuizResult, onRestart: () => void, answers?
       shareIcon.classList.add('btn-icon');
       shareBtn.prepend(shareIcon);
       shareBtn.addEventListener('click', () => {
-        trackShareClick(type.id);
         // Collect currently checked service keys from the picker
         const selectedKeys: string[] = [];
         el.querySelectorAll('.picker-item.checked').forEach(item => {
